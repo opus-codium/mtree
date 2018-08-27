@@ -65,7 +65,7 @@ RSpec.describe Mtree::Parser do
   context '#parse_file' do
     let(:parser) do
       parser = Mtree::Parser.new
-      parser.parse_file('/etc/mtree/BSD.sendmail.dist')
+      parser.parse_file('spec/fixtures/BSD.sendmail.dist')
       parser
     end
 
