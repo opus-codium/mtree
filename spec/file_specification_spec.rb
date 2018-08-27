@@ -36,7 +36,10 @@ RSpec.describe Mtree::FileSpecification do
           Mtree::FileSpecification.new('.', gname: 'wheel')
         end
 
-        it { expect(subject.match?(root)).to be_truthy }
+        it do
+          pending('Not portable: GNU/Linux does not have a wheel group')
+          expect(subject.match?(root)).to be_truthy
+        end
       end
 
       describe 'uid' do
