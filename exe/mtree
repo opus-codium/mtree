@@ -1,3 +1,72 @@
 #!/usr/bin/env ruby
 
 require 'mtree'
+
+require 'optparse'
+
+options = {
+  group_mapping: {},
+  user_mapping: {},
+}
+
+OptionParser.new do |opts|
+  opts.banner = 'usage: mtree options'
+
+  opts.on('-e', 'Noop.  For compatibility only') do
+  end
+  opts.on('-f', '--file=FILE', 'Read the specification from FILE instead of standard input') do |specification|
+    options[:specification] = specification
+  end
+
+  opts.on('-p', '--path=PATH', 'Use the file hierarchy rooted in PATH, instead of the current directory') do |path|
+    options[:root] = path
+  end
+
+  opts.on('-u', '--update') do
+    options[:update] = true
+  end
+
+  # Extensions
+
+  opts.on('--leaves', 'Only consider leaves of the specification') do
+    options[:leaves] = true
+  end
+
+  opts.on('--map-gname=MAPPING', 'Apply from:to MAPPING to the gname field') do |mapping|
+    mapping.split(',').each do |tuple|
+      from, to = tuple.split(':', 2)
+      options[:group_mapping][from] = to
+    end
+  end
+
+  opts.on('--map-uname=MAPPING', 'Apply from:to MAPPING to the uname field') do |mapping|
+    mapping.split(',').each do |tuple|
+      from, to = tuple.split(':', 2)
+      options[:user_mapping][from] = to
+    end
+  end
+end.parse!
+
+parser = Mtree::Parser.new
+parser.parse_file(options[:specification])
+specifications = parser.specifications
+
+specifications = specifications.leaves if options[:leaves]
+
+options[:group_mapping].each do |from, to|
+  specifications.each do |specification|
+    specification.gname = to if specification.gname == from
+  end
+end
+
+options[:user_mapping].each do |from, to|
+  specifications.each do |specification|
+    specification.uname = to if specification.uname == from
+  end
+end
+
+if options[:update]
+  specifications.enforce(options[:root] || '.')
+else
+  exit specifications.match?(options[:root] || '.') ? 0 : 2
+end

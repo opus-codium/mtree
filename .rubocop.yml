@@ -1,0 +1,12 @@
+AllCops:
+  Exclude:
+    - 'lib/mtree/parser.tab.rb'
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
