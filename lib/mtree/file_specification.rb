@@ -100,12 +100,12 @@ module Mtree
       child.relative_path = File.join(relative_path, child.filename)
     end
 
-    def leaves
+    def leaves!
       if @children.any?
-        @children.map(&:leaves).inject(:+)
-      else
-        [self]
+        @attributes[:nochange] = true
+        @children.each(&:leaves!)
       end
+      self
     end
 
     def to_s(options = {})

@@ -64,7 +64,7 @@ parser = Mtree::Parser.new
 parser.parse_file(options[:specification])
 specifications = parser.specifications
 
-specifications = specifications.leaves if options[:leaves]
+specifications.leaves! if options[:leaves]
 
 options[:group_mapping].each do |from, to|
   specifications.each do |specification|

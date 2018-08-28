@@ -90,7 +90,7 @@ RSpec.describe Mtree::FileSpecification do
     it { expect(nodes).to eq([root, leaf]) }
   end
 
-  describe '#leaves' do
+  describe '#leaves!' do
     let(:root) do
       Mtree::FileSpecification.new('.', uname: 'root')
     end
@@ -101,8 +101,10 @@ RSpec.describe Mtree::FileSpecification do
 
     before do
       root << leaf
+      root.leaves!
     end
 
-    it { expect(root.leaves).to eq([leaf]) }
+    it { expect(root.nochange).to be_truthy }
+    it { expect(leaf.nochange).to be_falsey }
   end
 end
