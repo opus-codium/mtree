@@ -108,6 +108,18 @@ module Mtree
       end
     end
 
+    def to_s(options = {})
+      descendent = ''
+      if @children.any?
+        descendent = @children.map do |child|
+          child.to_s(options)
+        end.join
+        descendent.gsub!(/^/, '    ') if options[:indent]
+      end
+
+      "#{filename} #{@attributes.map { |k, v| "#{k}=#{v}" }.join(' ')}\n#{descendent}..\n"
+    end
+
     private
 
     def full_filename(root)

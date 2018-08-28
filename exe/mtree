@@ -5,6 +5,7 @@ require 'mtree'
 require 'optparse'
 
 options = {
+  action: :check,
   group_mapping: {},
   user_mapping: {},
 }
@@ -22,11 +23,23 @@ OptionParser.new do |opts|
     options[:root] = path
   end
 
+  opts.on('-j', 'Indent the output 4 spaces each time a directory level is descended') do
+    options[:indent] = true
+  end
+
   opts.on('-u', '--update') do
-    options[:update] = true
+    options[:action] = :update
   end
 
   # Extensions
+
+  opts.on('--check', 'Checks that the files hierarchy match the specification') do
+    options[:action] = :check
+  end
+
+  opts.on('--print', 'Print the transformed specification') do
+    options[:action] = :print
+  end
 
   opts.on('--leaves', 'Only consider leaves of the specification') do
     options[:leaves] = true
@@ -65,8 +78,11 @@ options[:user_mapping].each do |from, to|
   end
 end
 
-if options[:update]
+case options[:action]
+when :update
   specifications.enforce(options[:root] || '.')
-else
+when :check
   exit specifications.match?(options[:root] || '.') ? 0 : 2
+when :print
+  puts specifications.to_s(indent: options[:indent])
 end
