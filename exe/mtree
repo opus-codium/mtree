@@ -58,6 +58,10 @@ OptionParser.new do |opts|
       options[:user_mapping][from] = to
     end
   end
+
+  opts.on('--symlink-to=DESTINATION', '') do |destination|
+    options[:symlink_to] = destination
+  end
 end.parse!
 
 parser = Mtree::Parser.new
@@ -76,6 +80,10 @@ options[:user_mapping].each do |from, to|
   specifications.each do |specification|
     specification.uname = to if specification.uname == from
   end
+end
+
+if options[:symlink_to]
+  specifications.symlink_to!(options[:symlink_to])
 end
 
 case options[:action]

@@ -1,7 +1,7 @@
 module Mtree
   class FileSpecification
     # VALID_ATTRIBUTES = %i[cksum device flags gid gname link md5 mode nlink nochange optional rmd160 sha1 sha256 sha384 sha512 size tags time type uid uname].freeze
-    VALID_ATTRIBUTES = %i[gid gname mode nochange optional type uid uname].freeze
+    VALID_ATTRIBUTES = %i[gid gname link mode nochange optional type uid uname].freeze
 
     VALID_ATTRIBUTES.each do |attr|
       define_method(attr) do
@@ -83,8 +83,9 @@ module Mtree
 
     def create(root)
       case type
-      when 'dir'  then FileUtils.mkdir(full_filename(root))
+      when 'dir'  then FileUtils.mkdir_p(full_filename(root))
       when 'file' then FileUtils.touch(full_filename(root))
+      when 'link' then FileUtils.ln_s(@attributes[:link], full_filename(root), force: true)
       end
       update(root)
     end
@@ -104,6 +105,19 @@ module Mtree
       if @children.any?
         @attributes[:nochange] = true
         @children.each(&:leaves!)
+      end
+      self
+    end
+
+    def symlink_to!(destination)
+      unless @attributes[:nochange]
+        @attributes = {
+          type: 'link',
+          link: File.join(destination, relative_path).sub(%r{/\.$}, '').sub(%r{/\./}, '/'),
+        }
+      end
+      @children.each do |child|
+        child.symlink_to!(destination)
       end
       self
     end

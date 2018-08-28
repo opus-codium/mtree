@@ -107,4 +107,24 @@ RSpec.describe Mtree::FileSpecification do
     it { expect(root.nochange).to be_truthy }
     it { expect(leaf.nochange).to be_falsey }
   end
+
+  describe '#symlink_to!' do
+    let(:root) do
+      Mtree::FileSpecification.new('.', uname: 'root')
+    end
+
+    let(:leaf) do
+      Mtree::FileSpecification.new('leaf', uname: 'romain')
+    end
+
+    before do
+      root << leaf
+      root.symlink_to!('/target')
+    end
+
+    it { expect(root.type).to eq('link') }
+    it { expect(root.link).to eq('/target') }
+    it { expect(leaf.type).to eq('link') }
+    it { expect(leaf.link).to eq('/target/leaf') }
+  end
 end
