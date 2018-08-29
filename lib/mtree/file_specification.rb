@@ -44,13 +44,13 @@ module Mtree
         res = false
       end
 
-      if problems.any? && !@attributes[:nochange]
+      if problems.any? && !nochange
         puts("#{relative_path}:")
         puts(problems.map { |problem| format("\t%<attr>s (%<expected>s, %<actual>s)", problem) })
         res = false
       end
 
-      @children.each do |child|
+      children.each do |child|
         res &= child.match?(root)
       end
 
@@ -72,7 +72,7 @@ module Mtree
         create(root)
       end
 
-      @children.each do |child|
+      children.each do |child|
         child.enforce(root)
       end
     end
@@ -85,7 +85,7 @@ module Mtree
       case type
       when 'dir'  then FileUtils.mkdir_p(full_filename(root))
       when 'file' then FileUtils.touch(full_filename(root))
-      when 'link' then FileUtils.ln_s(@attributes[:link], full_filename(root), force: true)
+      when 'link' then FileUtils.ln_s(link, full_filename(root), force: true)
       end
       update(root)
     end
@@ -96,27 +96,27 @@ module Mtree
     end
 
     def <<(child)
-      @children << child
+      children << child
 
       child.relative_path = File.join(relative_path, child.filename)
     end
 
     def leaves!
-      if @children.any?
-        @attributes[:nochange] = true
-        @children.each(&:leaves!)
+      if children.any?
+        self.nochange = true
+        children.each(&:leaves!)
       end
       self
     end
 
     def symlink_to!(destination)
-      unless @attributes[:nochange]
+      unless nochange
         @attributes = {
           type: 'link',
           link: File.join(destination, relative_path).sub(%r{/\.$}, '').sub(%r{/\./}, '/'),
         }
       end
-      @children.each do |child|
+      children.each do |child|
         child.symlink_to!(destination)
       end
       self
@@ -124,8 +124,8 @@ module Mtree
 
     def to_s(options = {})
       descendent = ''
-      if @children.any?
-        descendent = @children.map do |child|
+      if children.any?
+        descendent = children.map do |child|
           child.to_s(options)
         end.join
         descendent.gsub!(/^/, '    ') if options[:indent]
