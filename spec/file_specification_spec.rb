@@ -127,4 +127,15 @@ RSpec.describe Mtree::FileSpecification do
     it { expect(leaf.type).to eq('link') }
     it { expect(leaf.link).to eq('/target/leaf') }
   end
+
+  describe '#attributes' do
+    subject do
+      Mtree::FileSpecification.new('foo', uname: 'root', gid: 1000, mode: 0o770, type: 'dir').attributes
+    end
+
+    it { expect(subject).to match('uname=root') }
+    it { expect(subject).to match('gid=1000') }
+    it { expect(subject).to match('mode=0770') }
+    it { expect(subject).to match('type=dir') }
+  end
 end

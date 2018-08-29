@@ -131,7 +131,23 @@ module Mtree
         descendent.gsub!(/^/, '    ') if options[:indent]
       end
 
-      "#{filename} #{@attributes.map { |k, v| "#{k}=#{v}" }.join(' ')}\n#{descendent}..\n"
+      "#{filename} #{attributes}\n#{descendent}..\n"
+    end
+
+    def attributes
+      parts = []
+
+      parts << format('gid=%d', gid)     if gid
+      parts << format('gname=%s', gname) if gname
+      parts << format('link=%s', link)   if link
+      parts << format('mode=0%o', mode)  if mode
+      parts << 'nochange'                if nochange
+      parts << 'optional'                if optional
+      parts << format('type=%s', type)   if type
+      parts << format('uid=%d', uid)     if uid
+      parts << format('uname=%s', uname) if uname
+
+      parts.join(' ')
     end
 
     private
