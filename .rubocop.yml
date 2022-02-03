@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - 'lib/mtree/parser.tab.rb'
+    - 'vendor/bundle/**/*'
 
 Metrics/LineLength:
   Enabled: false

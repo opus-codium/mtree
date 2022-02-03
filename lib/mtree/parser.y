@@ -7,7 +7,12 @@ rule
              | expression
 
   expression: SET attributes LINE_BREAK         { @defaults.merge!(val[1]) }
-            | IDENTIFIER attributes LINE_BREAK  { spec = Mtree::FileSpecification.new(val[0], @defaults.merge(val[1])); if @specifications.nil? then @specifications = spec end; if @path_components.last then @path_components.last << spec end; @path_components.push(spec) } # @path_components.push(val[0]); @specifications.push() }
+            | IDENTIFIER attributes LINE_BREAK  {
+                                                  spec = Mtree::FileSpecification.new(val[0], @defaults.merge(val[1]))
+                                                  @specifications ||= spec
+                                                  @path_components.last << spec if @path_components.last
+                                                  @path_components.push(spec)
+                                                }
             | DOT_DOT LINE_BREAK                { @path_components.pop }
             | LINE_BREAK
 
@@ -18,7 +23,7 @@ rule
            | GNAME    { result = { gname:    val[0] } }
            | MODE     { result = { mode:     Integer(val[0], 8) } }
            | NOCHANGE { result = { nochange: true } }
-	   | TAGS     { result = {} }
+           | TAGS     { result = {} }
            | TYPE     { result = { type:     val[0] } }
            | UID      { result = { uid:      Integer(val[0]) } }
            | UNAME    { result = { uname:    val[0] } }
