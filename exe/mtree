@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'mtree'
 
@@ -10,7 +11,7 @@ options = {
   user_mapping: {},
 }
 
-OptionParser.new do |opts|
+OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
   opts.banner = 'usage: mtree options'
 
   opts.on('-e', 'Noop.  For compatibility only') do
@@ -82,9 +83,7 @@ options[:user_mapping].each do |from, to|
   end
 end
 
-if options[:symlink_to]
-  specifications.symlink_to!(options[:symlink_to])
-end
+specifications.symlink_to!(options[:symlink_to]) if options[:symlink_to]
 
 case options[:action]
 when :update

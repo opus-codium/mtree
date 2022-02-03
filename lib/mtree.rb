@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mtree/file_specification'
 require 'mtree/parser.tab'
 require 'mtree/version'
