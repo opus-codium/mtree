@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Mtree
-  class FileSpecification
+  class FileSpecification # rubocop:disable Metrics/ClassLength
     # VALID_ATTRIBUTES = %i[cksum device flags gid gname link md5 mode nlink nochange optional rmd160 sha1 sha256 sha384 sha512 size tags time type uid uname].freeze
     VALID_ATTRIBUTES = %i[gid gname link mode nochange optional type uid uname].freeze
 
@@ -13,9 +15,7 @@ module Mtree
       end
     end
 
-    attr_accessor :filename
-    attr_accessor :relative_path
-    attr_accessor :children
+    attr_accessor :filename, :relative_path, :children
 
     def initialize(filename, attributes = {})
       @filename = filename
@@ -23,11 +23,12 @@ module Mtree
       if (invalid_keys = attributes.keys - VALID_ATTRIBUTES) != []
         raise "Unsupported attribute: #{invalid_keys.first}"
       end
+
       @attributes = attributes
       @children = []
     end
 
-    def match?(root)
+    def match?(root) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       res = true
       problems = []
 
@@ -35,9 +36,7 @@ module Mtree
         @attributes.each do |attr, expected|
           actual = send("current_#{attr}", root)
 
-          if expected != actual
-            problems << { attr: attr, expected: expected, actual: actual }
-          end
+          problems << { attr: attr, expected: expected, actual: actual } if expected != actual
         end
       rescue Errno::ENOENT
         puts "#{relative_path} missing"
@@ -134,7 +133,7 @@ module Mtree
       "#{filename} #{attributes}\n#{descendent}..\n"
     end
 
-    def attributes
+    def attributes # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       parts = []
 
       parts << format('gid=%d', gid)     if gid

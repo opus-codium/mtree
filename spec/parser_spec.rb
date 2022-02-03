@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Mtree::Parser do
   subject do
     parser = Mtree::Parser.new
