@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'This is a ruby utility and library providing the mtree(1) features found on BSDs.'
   spec.homepage      = 'https://github.com/opus-codium/mtree'
   spec.license       = 'MIT'
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -26,5 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'racc'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'simplecov'
 end
