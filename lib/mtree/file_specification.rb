@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'etc'
+
 module Mtree
   class FileSpecification # rubocop:disable Metrics/ClassLength
     # VALID_ATTRIBUTES = %i[cksum device flags gid gname link md5 mode nlink nochange optional rmd160 sha1 sha256 sha384 sha512 size tags time type uid uname].freeze
