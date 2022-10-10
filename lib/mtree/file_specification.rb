@@ -86,7 +86,9 @@ module Mtree
       case type
       when 'dir'  then FileUtils.mkdir_p(full_filename(root))
       when 'file' then FileUtils.touch(full_filename(root))
-      when 'link' then FileUtils.ln_s(link, full_filename(root), force: true)
+      when 'link'
+        FileUtils.rm_rf(full_filename(root))
+        FileUtils.ln_s(link, full_filename(root))
       end
       update(root)
     end
