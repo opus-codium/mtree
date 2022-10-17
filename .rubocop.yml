@@ -7,11 +7,14 @@ Metrics/LineLength:
   Enabled: false
 
 Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*.rb'
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
 
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:
-  Enabled: false
+  EnforcedStyleForMultiline: consistent_comma

@@ -11,7 +11,7 @@ options = {
   user_mapping: {},
 }
 
-OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
+OptionParser.new do |opts|
   opts.banner = 'usage: mtree options'
 
   opts.on('-e', 'Noop.  For compatibility only') do
