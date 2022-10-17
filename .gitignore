@@ -4,6 +4,7 @@
 /coverage/
 /doc/
 /pkg/
+/lib/mtree/parser.tab.rb
 /spec/reports/
 /tmp/
 /Gemfile.lock
